@@ -8,8 +8,8 @@ export const getUsers = (req: Request, res: Response) => {
     .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
 };
 
-export const  getUser = (req: Request, res: Response) => {
-  user.findById(req.params.id)
+export const getUser = (req: Request, res: Response) => {
+  user.findById(req.params.userId)
     .then(user => res.send({data: user}))
     .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
 };
