@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import userRouter from '../routes/users';
+import cardRouter from '../routes/cards';
 
 const app = express();
 const {PORT = 3000} = process.env;
@@ -20,5 +21,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use('/users', userRouter);
+app.use('/cards', cardRouter);
 
 app.listen(PORT, () => console.log(`App listening on port ${PORT}`));
