@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   //  @ts-expect-error 2339
-  req.user = { _id: '678e8b86b6511ce57f64ceeb' };
+  req.user = { _id: '678ea1d147ce0362ef9db179' };
 
   next();
 });
