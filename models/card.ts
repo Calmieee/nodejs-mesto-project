@@ -1,5 +1,4 @@
-import { ObjectId } from 'mongoose';
-import mongoose from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 
 export interface ICard {
   name: string;
