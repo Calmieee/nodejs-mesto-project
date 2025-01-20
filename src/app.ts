@@ -3,10 +3,11 @@ import mongoose from 'mongoose';
 import userRouter from '../routes/users';
 import cardRouter from '../routes/cards';
 
-const app = express();
-const { PORT = 3000 } = process.env;
+const { port, dbUri } = require('../config');
 
-mongoose.connect('mongodb://localhost:27017/mestodb');
+const app = express();
+
+mongoose.connect(dbUri);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,4 +22,4 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 
-app.listen(PORT, () => console.log(`App listening on port ${PORT}`));
+app.listen(port, () => console.log(`App listening on port ${port}`));

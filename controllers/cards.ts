@@ -1,26 +1,28 @@
 import { Request, Response } from 'express';
 import Card from '../models/card';
-import * as errors from '../error/const';
+import * as constants from '../error/const';
 
 export const getCards = (_req: Request, res: Response) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch(() => res.status(errors.DEFAULT_ERROR_CODE)
-      .send({ message: errors.DEFAULT_ERROR_MESSAGE }));
+    .catch(() => res.status(constants.DEFAULT_ERROR_CODE)
+      .send({ message: constants.DEFAULT_ERROR_MESSAGE }));
 };
 
 export const createCard = (req: Request, res: Response) => {
   const { name, link } = req.body;
   // @ts-expect-error 2339
   Card.create({ name, link, owner: req.user._id })
-    .then((card) => res.status(201).send({ data: card }))
-    .catch(() => res.status(errors.DATA_ERROR_CODE).send({ message: errors.DATA_ERROR_MESSAGE }));
+    .then((card) => res.status(constants.STATUS_CREATED).send({ data: card }))
+    .catch(() => res.status(constants.DATA_ERROR_CODE)
+      .send({ message: constants.DATA_ERROR_MESSAGE }));
 };
 
 export const deleteCard = (req: Request, res: Response) => {
   Card.findByIdAndDelete(req.params.cardId)
     .then((card) => res.send({ data: card }))
-    .catch(() => res.status(errors.NOT_FOUND_CODE).send({ message: errors.ID_ERROR_MESSAGE }));
+    .catch(() => res.status(constants.NOT_FOUND_CODE)
+      .send({ message: constants.ID_ERROR_MESSAGE }));
 };
 
 export const likeCard = (req: Request, res: Response) => {
@@ -33,9 +35,10 @@ export const likeCard = (req: Request, res: Response) => {
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
-        return res.status(errors.NOT_FOUND_CODE).send({ message: errors.ID_ERROR_MESSAGE });
+        return res.status(constants.NOT_FOUND_CODE).send({ message: constants.ID_ERROR_MESSAGE });
       }
-      return res.status(errors.DEFAULT_ERROR_CODE).send({ message: errors.DEFAULT_ERROR_MESSAGE });
+      return res.status(constants.DEFAULT_ERROR_CODE)
+        .send({ message: constants.DEFAULT_ERROR_MESSAGE });
     });
 };
 
@@ -49,8 +52,9 @@ export const dislikeCard = (req: Request, res: Response) => {
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'DocumentNotFoundError') {
-        return res.status(errors.NOT_FOUND_CODE).send({ message: errors.ID_ERROR_MESSAGE });
+        return res.status(constants.NOT_FOUND_CODE).send({ message: constants.ID_ERROR_MESSAGE });
       }
-      return res.status(errors.DEFAULT_ERROR_CODE).send({ message: errors.DEFAULT_ERROR_MESSAGE });
+      return res.status(constants.DEFAULT_ERROR_CODE)
+        .send({ message: constants.DEFAULT_ERROR_MESSAGE });
     });
 };

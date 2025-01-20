@@ -4,6 +4,8 @@ const DEFAULT_ERROR_CODE = 500;
 const ID_ERROR_MESSAGE = 'передан некорректный _id';
 const DATA_ERROR_MESSAGE = 'переданы некорректные данные';
 const DEFAULT_ERROR_MESSAGE = 'На сервере произошла ошибка';
+const STATUS_SUCCESS = 200;
+const STATUS_CREATED = 201;
 
 export {
   DATA_ERROR_CODE,
@@ -12,4 +14,6 @@ export {
   ID_ERROR_MESSAGE,
   DATA_ERROR_MESSAGE,
   DEFAULT_ERROR_MESSAGE,
+  STATUS_SUCCESS,
+  STATUS_CREATED,
 };
