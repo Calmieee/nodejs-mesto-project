@@ -1,4 +1,5 @@
 import mongoose, { ObjectId } from 'mongoose';
+import validator from 'validator';
 
 export interface ICard {
   name: string;
@@ -19,6 +20,9 @@ const CardSchema = new mongoose.Schema<ICard>(
     link: {
       type: String,
       required: true,
+      validate: {
+        validator: (v: string) => validator.isURL(v),
+      },
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,

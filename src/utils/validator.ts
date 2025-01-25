@@ -30,9 +30,9 @@ export const signUpValidator = celebrate({
   body: Joi.object().keys({
     email: Joi.string().email().required().custom(joiEmailValidator),
     password: Joi.string().required(),
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(200),
-    avatar: Joi.string().custom(joiUrlValidator),
+    name: Joi.string().min(2).max(30).optional(),
+    about: Joi.string().min(2).max(200).optional(),
+    avatar: Joi.string().custom(joiUrlValidator).optional(),
   }),
 });
 
