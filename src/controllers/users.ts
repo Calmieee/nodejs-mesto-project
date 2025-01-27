@@ -59,7 +59,10 @@ export const createUser = (req: Request, res: Response, next: NextFunction) => {
       password: hashedPassword,
     }))
     .then((user) => {
-      res.status(constants.STATUS_CREATED).send({ data: user });
+      const userWithoutPassword = user.toObject() as any;
+      delete userWithoutPassword.password;
+
+      res.status(constants.STATUS_CREATED).send({ data: userWithoutPassword });
     })
     .catch((error: any) => {
       if (error.code === 11000) {

@@ -1,5 +1,7 @@
-import express, { NextFunction } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
+import { errors } from 'celebrate';
+import limiter from './utils/limiter';
 import userRouter from './routes/users';
 import cardRouter from './routes/cards';
 import NotFoundError from './error/notFoundError';
@@ -21,15 +23,17 @@ app.use(requestLogger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(limiter);
 app.post('/signin', signInValidator, login);
 app.post('/signup', signUpValidator, createUser);
 app.use(auth);
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
-app.use((next: NextFunction) => {
+app.use((req: Request, res: Response, next: NextFunction) => {
   next(new NotFoundError(INVALID_DATA_MESSAGE));
 });
 app.use(errorLogger);
+app.use(errors());
 app.use(ErrorHub);
 
 app.listen(port, () => console.log(`App listening on port ${port}`));

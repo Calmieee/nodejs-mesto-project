@@ -10,6 +10,7 @@ import {
   CARD_NOT_FOUND_MESSAGE,
   STATUS_FORBIDDEN_MESSAGE,
   STATUS_SUCCESS,
+  USER_NOT_FOUND_MESSAGE,
   VALIDATION_ERROR_MESSAGE,
 } from '../error/const';
 import ForbiddenError from '../error/forbiddenError';
@@ -34,22 +35,33 @@ export const createCard = (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-export const deleteCard = (req: Request, res: Response, next: NextFunction) => {
-  Card.findById(req.params.id)
+export const deleteCard = (
+  req: Request & { user?: JwtPayload | string },
+  res: Response,
+  next: NextFunction,
+) => {
+  Card.findById(req.params.cardId)
     .then((card) => {
+      const userId = (req.user as { _id?: string | ObjectId })._id;
+
       if (!card) {
         throw new NotFoundError(CARD_NOT_FOUND_MESSAGE);
       }
 
-      Card.deleteOne({ _id: card._id })
+      if (!userId) {
+        return next(new ForbiddenError(USER_NOT_FOUND_MESSAGE));
+      }
+
+      if (card.owner.toString() !== userId.toString()) {
+        throw new ForbiddenError(STATUS_FORBIDDEN_MESSAGE);
+      }
+
+      return Card.deleteOne({ _id: card._id })
         .then(() => {
-          if (card.owner.toString() !== req.params.userId) {
-            throw new ForbiddenError(STATUS_FORBIDDEN_MESSAGE);
-          }
           res.status(STATUS_SUCCESS).send({ message: CARD_DELITION_SUCCESS_MESSAGE });
         });
     })
-    .catch((err : any) => {
+    .catch((err: any) => {
       if (err.name === 'CastError') {
         const validationError = new ValidationError(VALIDATION_ERROR_MESSAGE);
         return next(validationError);
@@ -63,11 +75,11 @@ const modifyCardLikes = (operation: '$addToSet' | '$pull') => (
   res: Response,
   next: NextFunction,
 ) => {
-  const { id } = req.params;
+  const { cardId } = req.params;
   const userId = (req.user as { _id: string | ObjectId })._id;
 
   Card.findByIdAndUpdate(
-    id,
+    cardId,
     { [operation]: { likes: userId } },
     { new: true },
   )
